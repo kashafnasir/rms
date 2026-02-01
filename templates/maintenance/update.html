@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}Update Maintenance Request{% endblock %}
+{% block page_title %}Update Maintenance Request{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-10 offset-md-1">
+        <div class="card mb-3">
+            <div class="card-header">
+                <h5>Request Details</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Property:</strong> {{ request.property.title }}</p>
+                        <p><strong>Tenant:</strong> {{ request.requester.full_name }}</p>
+                        <p><strong>Category:</strong> {{ request.category|title }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Priority:</strong> 
+                            <span class="badge bg-{{ 'danger' if request.priority == 'urgent' else 'warning' }}">
+                                {{ request.priority|title }}
+                            </span>
+                        </p>
+                        <p><strong>Reported:</strong> {{ request.reported_date.strftime('%Y-%m-%d %H:%M') }}</p>
+                    </div>
+                </div>
+                <hr>
+                <p><strong>Title:</strong> {{ request.title }}</p>
+                <p><strong>Description:</strong><br>{{ request.description }}</p>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h5>Update Request</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('update_maintenance', request_id=request.id) }}">
+                    {% if current_user.role in ['admin', 'owner'] %}
+                    <div class="mb-3">
+                        <label for="staff_id" class="form-label">Assign to Staff</label>
+                        <select class="form-select" id="staff_id" name="staff_id">
+                            <option value="">Select Staff Member</option>
+                            {% for staff_member in staff %}
+                            <option value="{{ staff_member.id }}" {% if request.staff_id == staff_member.id %}selected{% endif %}>
+                                {{ staff_member.full_name }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="mb-3">
+                        <label for="status" class="form-label">Status *</label>
+                        <select class="form-select" id="status" name="status" required>
+                            <option value="pending" {% if request.status == 'pending' %}selected{% endif %}>Pending</option>
+                            <option value="in_progress" {% if request.status == 'in_progress' %}selected{% endif %}>In Progress</option>
+                            <option value="completed" {% if request.status == 'completed' %}selected{% endif %}>Completed</option>
+                            <option value="cancelled" {% if request.status == 'cancelled' %}selected{% endif %}>Cancelled</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="cost" class="form-label">Cost ($)</label>
+                        <input type="number" class="form-control" id="cost" name="cost" value="{{ request.cost or '' }}" min="0" step="0.01">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="resolution_notes" class="form-label">Resolution Notes</label>
+                        <textarea class="form-control" id="resolution_notes" name="resolution_notes" rows="4" placeholder="Add notes about the resolution...">{{ request.resolution_notes or '' }}</textarea>
+                    </div>
+                    
+                    {% if request.assigned_date %}
+                    <p class="text-muted"><small>Assigned on: {{ request.assigned_date.strftime('%Y-%m-%d %H:%M') }}</small></p>
+                    {% endif %}
+                    
+                    {% if request.completed_date %}
+                    <p class="text-muted"><small>Completed on: {{ request.completed_date.strftime('%Y-%m-%d %H:%M') }}</small></p>
+                    {% endif %}
+                    
+                    <div class="text-end">
+                        <a href="{{ url_for('maintenance') }}" class="btn btn-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-primary">Update Request</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

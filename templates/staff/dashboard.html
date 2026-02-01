@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}Staff Dashboard{% endblock %}
+{% block page_title %}Staff Dashboard - Maintenance{% endblock %}
+
+{% block content %}
+<!-- Statistics Cards -->
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card text-white bg-warning">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-clock"></i> Pending</h5>
+                <h2>{{ pending_count }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-primary">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-gear"></i> In Progress</h5>
+                <h2>{{ in_progress_count }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-success">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-check-circle"></i> Completed</h5>
+                <h2>{{ completed_count }}</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Assigned Requests -->
+<div class="card">
+    <div class="card-header">
+        <h5><i class="bi bi-list-task"></i> My Assigned Maintenance Requests</h5>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Title</th>
+                        <th>Property</th>
+                        <th>Category</th>
+                        <th>Priority</th>
+                        <th>Status</th>
+                        <th>Reported</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for request in assigned_requests %}
+                    <tr>
+                        <td>{{ request.id }}</td>
+                        <td>{{ request.title }}</td>
+                        <td>{{ request.property.title }}</td>
+                        <td>{{ request.category|title }}</td>
+                        <td>
+                            <span class="badge bg-{{ 'danger' if request.priority == 'urgent' else 'warning' if request.priority == 'high' else 'info' }}">
+                                {{ request.priority }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge bg-{{ 'success' if request.status == 'completed' else 'primary' if request.status == 'in_progress' else 'secondary' }}">
+                                {{ request.status|replace('_', ' ')|title }}
+                            </span>
+                        </td>
+                        <td>{{ request.reported_date.strftime('%Y-%m-%d') }}</td>
+                        <td>
+                            <a href="{{ url_for('update_maintenance', request_id=request.id) }}" class="btn btn-sm btn-primary">
+                                Update
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

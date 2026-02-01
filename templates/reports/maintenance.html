@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}Maintenance Report{% endblock %}
+{% block page_title %}Maintenance Request Report{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card text-white bg-warning">
+            <div class="card-body">
+                <h5 class="card-title">Pending</h5>
+                <h2>{{ pending }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-primary">
+            <div class="card-body">
+                <h5 class="card-title">In Progress</h5>
+                <h2>{{ in_progress }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-success">
+            <div class="card-body">
+                <h5 class="card-title">Completed</h5>
+                <h2>{{ completed }}</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5><i class="bi bi-tools"></i> Maintenance Request Details</h5>
+        <button onclick="window.print()" class="btn btn-sm btn-primary">
+            <i class="bi bi-printer"></i> Print Report
+        </button>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Property</th>
+                        <th>Category</th>
+                        <th>Priority</th>
+                        <th>Status</th>
+                        <th>Reported Date</th>
+                        <th>Cost</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for request in requests %}
+                    <tr>
+                        <td>{{ request.id }}</td>
+                        <td>{{ request.property.title }}</td>
+                        <td>{{ request.category|title }}</td>
+                        <td>
+                            <span class="badge bg-{{ 'danger' if request.priority == 'urgent' else 'warning' if request.priority == 'high' else 'info' }}">
+                                {{ request.priority|title }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge bg-{{ 'success' if request.status == 'completed' else 'primary' if request.status == 'in_progress' else 'secondary' }}">
+                                {{ request.status|replace('_', ' ')|title }}
+                            </span>
+                        </td>
+                        <td>{{ request.reported_date.strftime('%Y-%m-%d') }}</td>
+                        <td>${{ "%.2f"|format(request.cost or 0) }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

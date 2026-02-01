@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block title %}Add Property{% endblock %}
+{% block page_title %}Add New Property{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-10 offset-md-1">
+        <div class="card">
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('add_property') }}" enctype="multipart/form-data">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="title" class="form-label">Property Title *</label>
+                            <input type="text" class="form-control" id="title" name="title" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="property_type" class="form-label">Property Type *</label>
+                            <select class="form-select" id="property_type" name="property_type" required>
+                                <option value="House">House</option>
+                                <option value="Apartment">Apartment</option>
+                                <option value="Shop">Shop</option>
+                                <option value="Office">Office</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="address" class="form-label">Address *</label>
+                        <input type="text" class="form-control" id="address" name="address" required>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label for="city" class="form-label">City</label>
+                            <input type="text" class="form-control" id="city" name="city">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="state" class="form-label">State</label>
+                            <input type="text" class="form-control" id="state" name="state">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="zip_code" class="form-label">ZIP Code</label>
+                            <input type="text" class="form-control" id="zip_code" name="zip_code">
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label for="bedrooms" class="form-label">Bedrooms</label>
+                            <input type="number" class="form-control" id="bedrooms" name="bedrooms" min="0">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="bathrooms" class="form-label">Bathrooms</label>
+                            <input type="number" class="form-control" id="bathrooms" name="bathrooms" min="0">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="area_sqft" class="form-label">Area (sq ft)</label>
+                            <input type="number" class="form-control" id="area_sqft" name="area_sqft" min="0" step="0.01">
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="rent_amount" class="form-label">Monthly Rent *</label>
+                            <input type="number" class="form-control" id="rent_amount" name="rent_amount" required min="0" step="0.01">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="security_deposit" class="form-label">Security Deposit</label>
+                            <input type="number" class="form-control" id="security_deposit" name="security_deposit" min="0" step="0.01">
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="amenities" class="form-label">Amenities (comma-separated)</label>
+                        <input type="text" class="form-control" id="amenities" name="amenities" placeholder="e.g., Parking, Pool, Gym">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="availability_status" class="form-label">Availability Status *</label>
+                        <select class="form-select" id="availability_status" name="availability_status" required>
+                            <option value="available">Available</option>
+                            <option value="occupied">Occupied</option>
+                            <option value="maintenance">Under Maintenance</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="image" class="form-label">Property Image</label>
+                        <input type="file" class="form-control" id="image" name="image" accept="image/*">
+                    </div>
+                    
+                    <div class="text-end">
+                        <a href="{{ url_for('properties') }}" class="btn btn-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-primary">Add Property</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

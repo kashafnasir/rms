@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block title %}Record Payment{% endblock %}
+{% block page_title %}Record Rent Payment{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="card">
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('add_payment') }}">
+                    <div class="mb-3">
+                        <label for="lease_id" class="form-label">Lease *</label>
+                        <select class="form-select" id="lease_id" name="lease_id" required onchange="updateTenantInfo(this)">
+                            <option value="">Select Lease</option>
+                            {% for lease in leases %}
+                            <option value="{{ lease.id }}" data-tenant-id="{{ lease.tenant_id }}" data-rent="{{ lease.monthly_rent }}">
+                                {{ lease.property.title }} - {{ lease.tenant.full_name }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <input type="hidden" id="tenant_id" name="tenant_id">
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="amount" class="form-label">Amount *</label>
+                            <input type="number" class="form-control" id="amount" name="amount" required min="0" step="0.01">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="payment_date" class="form-label">Payment Date *</label>
+                            <input type="date" class="form-control" id="payment_date" name="payment_date" required>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="payment_month" class="form-label">Payment Month *</label>
+                            <input type="month" class="form-control" id="payment_month" name="payment_month" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="payment_method" class="form-label">Payment Method *</label>
+                            <select class="form-select" id="payment_method" name="payment_method" required>
+                                <option value="cash">Cash</option>
+                                <option value="bank_transfer">Bank Transfer</option>
+                                <option value="online">Online Payment</option>
+                                <option value="check">Check</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="transaction_id" class="form-label">Transaction ID</label>
+                            <input type="text" class="form-control" id="transaction_id" name="transaction_id">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="late_fee" class="form-label">Late Fee</label>
+                            <input type="number" class="form-control" id="late_fee" name="late_fee" value="0" min="0" step="0.01">
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="notes" class="form-label">Notes</label>
+                        <textarea class="form-control" id="notes" name="notes" rows="3"></textarea>
+                    </div>
+                    
+                    <div class="text-end">
+                        <a href="{{ url_for('payments') }}" class="btn btn-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-primary">Record Payment</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function updateTenantInfo(select) {
+    var option = select.options[select.selectedIndex];
+    if (option.value) {
+        document.getElementById('tenant_id').value = option.getAttribute('data-tenant-id');
+        document.getElementById('amount').value = option.getAttribute('data-rent');
+    }
+}
+
+// Set today's date as default
+document.getElementById('payment_date').valueAsDate = new Date();
+</script>
+{% endblock %}

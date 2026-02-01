@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}Submit Maintenance Request{% endblock %}
+{% block page_title %}Submit Maintenance Request{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="card">
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('add_maintenance') }}">
+                    <div class="mb-3">
+                        <label for="property_id" class="form-label">Property *</label>
+                        <select class="form-select" id="property_id" name="property_id" required>
+                            <option value="">Select Property</option>
+                            {% for property in properties %}
+                            <option value="{{ property.id }}">
+                                {{ property.title }} - {{ property.address }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Issue Title *</label>
+                        <input type="text" class="form-control" id="title" name="title" required placeholder="Brief description of the issue">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Detailed Description *</label>
+                        <textarea class="form-control" id="description" name="description" rows="4" required placeholder="Provide detailed information about the maintenance issue..."></textarea>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="category" class="form-label">Category *</label>
+                            <select class="form-select" id="category" name="category" required>
+                                <option value="">Select Category</option>
+                                <option value="plumbing">Plumbing</option>
+                                <option value="electrical">Electrical</option>
+                                <option value="hvac">HVAC</option>
+                                <option value="appliances">Appliances</option>
+                                <option value="structural">Structural</option>
+                                <option value="pest_control">Pest Control</option>
+                                <option value="general">General Maintenance</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="priority" class="form-label">Priority *</label>
+                            <select class="form-select" id="priority" name="priority" required>
+                                <option value="low">Low - Can wait</option>
+                                <option value="medium" selected>Medium - Normal</option>
+                                <option value="high">High - Needs attention soon</option>
+                                <option value="urgent">Urgent - Immediate attention required</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle"></i> You will receive notifications when your request is updated.
+                    </div>
+                    
+                    <div class="text-end">
+                        <a href="{{ url_for('maintenance') }}" class="btn btn-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-primary">Submit Request</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

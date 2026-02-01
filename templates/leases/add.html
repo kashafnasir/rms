@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}Create Lease{% endblock %}
+{% block page_title %}Create New Lease Agreement{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-10 offset-md-1">
+        <div class="card">
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('add_lease') }}">
+                    <div class="row">
+                        <div class="mb-3">
+                        <label for="property_id" class="form-label">Property *</label>
+                        <select class="form-select" id="property_id" name="property_id"  required> 
+                            <option value="">Select Property</option>
+                            {% for property in properties %}
+                            <option value="{{ property.id }}">
+                                {{ property.title }} - {{ property.address }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="tenant_id" class="form-label">Tenant *</label>
+                            <select class="form-select" id="tenant_id" name="tenant_id" required>
+                                <option value="">Select Tenant</option>
+                                {% for tenant in tenants %}
+                                <option value="{{ tenant.id }}">
+                                    {{ tenant.full_name }} ({{ tenant.email }})
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="start_date" class="form-label">Start Date *</label>
+                            <input type="date" class="form-control" id="start_date" name="start_date" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="end_date" class="form-label">End Date *</label>
+                            <input type="date" class="form-control" id="end_date" name="end_date" required>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label for="monthly_rent" class="form-label">Monthly Rent *</label>
+                            <input type="number" class="form-control" id="monthly_rent" name="monthly_rent" required min="0" step="0.01">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="security_deposit" class="form-label">Security Deposit</label>
+                            <input type="number" class="form-control" id="security_deposit" name="security_deposit" min="0" step="0.01">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="payment_due_day" class="form-label">Payment Due Day</label>
+                            <input type="number" class="form-control" id="payment_due_day" name="payment_due_day" value="1" min="1" max="31">
+                            <small class="text-muted">Day of month (1-31)</small>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="terms_conditions" class="form-label">Terms and Conditions</label>
+                        <textarea class="form-control" id="terms_conditions" name="terms_conditions" rows="5" placeholder="Enter lease terms and conditions..."></textarea>
+                    </div>
+                    
+                    <div class="text-end">
+                        <a href="{{ url_for('leases') }}" class="btn btn-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-primary">Create Lease</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

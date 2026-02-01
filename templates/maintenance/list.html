@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}Maintenance Requests{% endblock %}
+{% block page_title %}Maintenance Management{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5><i class="bi bi-tools"></i> Maintenance Requests</h5>
+        {% if current_user.role == 'tenant' %}
+        <a href="{{ url_for('add_maintenance') }}">New Request</a>
+        {% endif %}
+        
+      
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Title</th>
+                        <th>Property</th>
+                        <th>Tenant</th>
+                        <th>Category</th>
+                        <th>Priority</th>
+                        <th>Status</th>
+                        <th>Reported</th>
+                        {% if current_user.role in ['admin', 'staff', 'owner'] %}
+                        <th>Action</th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for request in requests %}
+                    <tr>
+                        <td>{{ request.id }}</td>
+                        <td>{{ request.title }}</td>
+                        <td>{{ request.property.title }}</td>
+                        <td>{{ request.requester.full_name }}</td>
+                        <td>{{ request.category|title }}</td>
+                        <td>
+                            <span class="badge bg-{{ 'danger' if request.priority == 'urgent' else 'warning' if request.priority == 'high' else 'info' if request.priority == 'medium' else 'secondary' }}">
+                                {{ request.priority|title }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge bg-{{ 'success' if request.status == 'completed' else 'primary' if request.status == 'in_progress' else 'secondary' }}">
+                                {{ request.status|replace('_', ' ')|title }}
+                            </span>
+                        </td>
+                        <td>{{ request.reported_date.strftime('%Y-%m-%d %H:%M') }}</td>
+                        {% if current_user.role in ['admin', 'staff', 'owner'] %}
+                        <td>
+                            <a href="{{ url_for('update_maintenance', request_id=request.id) }}" class="btn btn-sm btn-primary">
+                                Update
+                            </a>
+                        </td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

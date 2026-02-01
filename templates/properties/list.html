@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}Properties{% endblock %}
+{% block page_title %}Properties Management{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5><i class="bi bi-building"></i> All Properties</h5>
+        {% if current_user.role in ['admin', 'owner'] %}
+        <a href="{{ url_for('add_property') }}" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Add Property
+        </a>
+        {% endif %}
+    </div>
+    <div class="card-body">
+        <div class="row">
+            {% for property in properties %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    {% if property.image_path %}
+                    <img src="{{ url_for('static', filename='uploads/' + property.image_path) }}" class="card-img-top" alt="{{ property.title }}" style="height: 200px; object-fit: cover;">
+                    {% else %}
+                    <div class="bg-secondary text-white text-center" style="height: 200px; display: flex; align-items: center; justify-content: center;">
+                        <i class="bi bi-building" style="font-size: 3rem;"></i>
+                    </div>
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ property.title }}</h5>
+                        <p class="card-text"><small class="text-muted">{{ property.property_type }}</small></p>
+                        <p class="card-text"><i class="bi bi-geo-alt"></i> {{ property.address }}, {{ property.city }}</p>
+                        <p class="card-text">
+                            <i class="bi bi-house"></i> {{ property.bedrooms }} BD | {{ property.bathrooms }} BA
+                        </p>
+                        <p class="card-text">
+                            <strong class="text-primary">${{ "%.2f"|format(property.rent_amount) }}/month</strong>
+                        </p>
+                        <span class="badge bg-{{ 'success' if property.availability_status == 'available' else 'danger' }}">
+                            {{ property.availability_status|title }}
+                        </span>
+                    </div>
+                    <div class="card-footer">
+                        <a href="{{ url_for('view_property', property_id=property.id) }}" class="btn btn-sm btn-info">View</a>
+                        {% if current_user.role in ['admin', 'owner'] %}
+                        <a href="{{ url_for('edit_property', property_id=property.id) }}" class="btn btn-sm btn-warning">Edit</a>
+                        <form method="POST" action="{{ url_for('delete_property', property_id=property.id) }}" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this property?');">
+                            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                        </form>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

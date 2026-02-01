@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Reports{% endblock %}
+{% block page_title %}Reports & Analytics{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <div class="card-body text-center">
+                <i class="bi bi-currency-dollar" style="font-size: 3rem; color: #28a745;"></i>
+                <h5 class="card-title mt-3">Rent Collection Report</h5>
+                <p class="card-text">View payment history, pending rents, and collection statistics.</p>
+                <a href="{{ url_for('rent_collection_report') }}" class="btn btn-primary">View Report</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <div class="card-body text-center">
+                <i class="bi bi-building" style="font-size: 3rem; color: #007bff;"></i>
+                <h5 class="card-title mt-3">Occupancy Report</h5>
+                <p class="card-text">Track property occupancy rates and availability.</p>
+                <a href="{{ url_for('occupancy_report') }}" class="btn btn-primary">View Report</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <div class="card-body text-center">
+                <i class="bi bi-tools" style="font-size: 3rem; color: #ffc107;"></i>
+                <h5 class="card-title mt-3">Maintenance Report</h5>
+                <p class="card-text">Monitor maintenance requests, costs, and resolution times.</p>
+                <a href="{{ url_for('maintenance_report') }}" class="btn btn-primary">View Report</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="alert alert-info">
+    <i class="bi bi-info-circle"></i> Reports can be exported to PDF or Excel format using the export buttons on each report page.
+</div>
+{% endblock %}

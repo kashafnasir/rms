@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Profile{% endblock %}
+{% block page_title %}Edit Profile{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="card">
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('edit_profile') }}">
+                    <div class="mb-3">
+                        <label for="full_name" class="form-label">Full Name *</label>
+                        <input type="text" class="form-control" id="full_name" name="full_name" value="{{ current_user.full_name }}" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email *</label>
+                        <input type="email" class="form-control" id="email" name="email" value="{{ current_user.email }}" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="phone" class="form-label">Phone</label>
+                        <input type="tel" class="form-control" id="phone" name="phone" value="{{ current_user.phone or '' }}">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="address" class="form-label">Address</label>
+                        <textarea class="form-control" id="address" name="address" rows="2">{{ current_user.address or '' }}</textarea>
+                    </div>
+                    
+                    <hr>
+                    
+                    <div class="mb-3">
+                        <label for="password" class="form-label">New Password (leave blank to keep current)</label>
+                        <input type="password" class="form-control" id="password" name="password">
+                        <small class="form-text text-muted">Only enter a password if you want to change it.</small>
+                    </div>
+                    
+                    <div class="text-end">
+                        <a href="{{ url_for('profile') }}" class="btn btn-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-primary">Update Profile</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

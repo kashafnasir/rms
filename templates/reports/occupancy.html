@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block title %}Occupancy Report{% endblock %}
+{% block page_title %}Property Occupancy Report{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card text-white bg-primary">
+            <div class="card-body">
+                <h5 class="card-title">Total Properties</h5>
+                <h2>{{ total_properties }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-danger">
+            <div class="card-body">
+                <h5 class="card-title">Occupied</h5>
+                <h2>{{ occupied }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-success">
+            <div class="card-body">
+                <h5 class="card-title">Available</h5>
+                <h2>{{ available }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-info">
+            <div class="card-body">
+                <h5 class="card-title">Occupancy Rate</h5>
+                <h2>{{ "%.1f"|format(occupancy_rate) }}%</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5><i class="bi bi-building"></i> Property Status Details</h5>
+        <button onclick="window.print()" class="btn btn-sm btn-primary">
+            <i class="bi bi-printer"></i> Print Report
+        </button>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Property</th>
+                        <th>Type</th>
+                        <th>Location</th>
+                        <th>Monthly Rent</th>
+                        <th>Status</th>
+                        <th>Owner</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for property in properties %}
+                    <tr>
+                        <td>{{ property.title }}</td>
+                        <td>{{ property.property_type }}</td>
+                        <td>{{ property.city }}, {{ property.state }}</td>
+                        <td>${{ "%.2f"|format(property.rent_amount) }}</td>
+                        <td>
+                            <span class="badge bg-{{ 'success' if property.availability_status == 'available' else 'danger' if property.availability_status == 'occupied' else 'warning' }}">
+                                {{ property.availability_status|title }}
+                            </span>
+                        </td>
+                        <td>{{ property.owner.full_name }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

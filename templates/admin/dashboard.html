@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard{% endblock %}
+{% block page_title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<!-- Statistics Cards -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card text-white bg-primary">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-people"></i> Total Users</h5>
+                <h2>{{ total_users }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-success">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-building"></i> Properties</h5>
+                <h2>{{ total_properties }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-info">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-file-text"></i> Active Leases</h5>
+                <h2>{{ total_leases }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-warning">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-currency-dollar"></i> Total Revenue</h5>
+                <h2>${{ "%.2f"|format(total_revenue) }}</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card bg-danger text-white">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-tools"></i> Pending Maintenance</h5>
+                <h2>{{ pending_maintenance }} Requests</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card bg-warning text-dark">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-person-check"></i> Pending User Approvals</h5>
+                <h2>{{ pending_users }} Users</h2>
+                <a href="{{ url_for('manage_users') }}" class="btn btn-dark btn-sm mt-2">
+                    <i class="bi bi-eye"></i> View Pending Users
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Activity -->
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="bi bi-credit-card"></i> Recent Payments</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Tenant</th>
+                                <th>Amount</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for payment in recent_payments %}
+                            <tr>
+                                <td>{{ payment.payer.full_name }}</td>
+                                <td>${{ "%.2f"|format(payment.amount) }}</td>
+                                <td>{{ payment.payment_date.strftime('%Y-%m-%d') }}</td>
+                                <td>
+                                    <span class="badge bg-{{ 'success' if payment.status == 'completed' else 'warning' }}">
+                                        {{ payment.status }}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="bi bi-tools"></i> Recent Maintenance Requests</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Priority</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for request in recent_requests %}
+                            <tr>
+                                <td>{{ request.title }}</td>
+                                <td>
+                                    <span class="badge bg-{{ 'danger' if request.priority == 'urgent' else 'warning' }}">
+                                        {{ request.priority }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="badge bg-{{ 'success' if request.status == 'completed' else 'secondary' }}">
+                                        {{ request.status }}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

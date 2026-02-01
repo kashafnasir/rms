@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block title %}Lease Agreement{% endblock %}
+{% block page_title %}Lease Agreement Details{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-10 offset-md-1">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="bi bi-file-text"></i> Lease Agreement #{{ lease.id }}</h5>
+            </div>
+            <div class="card-body">
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <h6 class="text-muted">PROPERTY INFORMATION</h6>
+                        <p><strong>Property:</strong> {{ lease.property.title }}</p>
+                        <p><strong>Type:</strong> {{ lease.property.property_type }}</p>
+                        <p><strong>Address:</strong> {{ lease.property.address }}, {{ lease.property.city }}, {{ lease.property.state }}</p>
+                        <p><strong>Owner:</strong> {{ lease.property.owner.full_name }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-muted">TENANT INFORMATION</h6>
+                        <p><strong>Name:</strong> {{ lease.tenant.full_name }}</p>
+                        <p><strong>Email:</strong> {{ lease.tenant.email }}</p>
+                        <p><strong>Phone:</strong> {{ lease.tenant.phone }}</p>
+                    </div>
+                </div>
+                
+                <hr>
+                
+                <div class="row mb-4">
+                    <div class="col-md-12">
+                        <h6 class="text-muted">LEASE TERMS</h6>
+                    </div>
+                    <div class="col-md-4">
+                        <p><strong>Start Date:</strong> {{ lease.start_date }}</p>
+                    </div>
+                    <div class="col-md-4">
+                        <p><strong>End Date:</strong> {{ lease.end_date }}</p>
+                    </div>
+                    <div class="col-md-4">
+                        <p><strong>Status:</strong> 
+                            <span class="badge bg-{{ 'success' if lease.status == 'active' else 'danger' }}">
+                                {{ lease.status|title }}
+                            </span>
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <p><strong>Monthly Rent:</strong> ${{ "%.2f"|format(lease.monthly_rent) }}</p>
+                    </div>
+                    <div class="col-md-4">
+                        <p><strong>Security Deposit:</strong> ${{ "%.2f"|format(lease.security_deposit or 0) }}</p>
+                    </div>
+                    <div class="col-md-4">
+                        <p><strong>Payment Due Day:</strong> {{ lease.payment_due_day }} of each month</p>
+                    </div>
+                </div>
+                
+                <hr>
+                
+                {% if lease.terms_conditions %}
+                <div class="row mb-4">
+                    <div class="col-md-12">
+                        <h6 class="text-muted">TERMS AND CONDITIONS</h6>
+                        <div class="border p-3 bg-light" style="white-space: pre-wrap;">
+                            {{ lease.terms_conditions }}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                
+                <div class="text-end">
+                    <a href="{{ url_for('leases') }}" class="btn btn-secondary">Back to Leases</a>
+                    <button onclick="window.print()" class="btn btn-primary">
+                        <i class="bi bi-printer"></i> Print
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

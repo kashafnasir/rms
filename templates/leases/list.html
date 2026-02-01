@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}Leases{% endblock %}
+{% block page_title %}Lease Management{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5><i class="bi bi-file-text"></i> All Leases</h5>
+        {% if current_user.role in ['admin', 'owner'] %}
+        <a href="{{ url_for('add_lease') }}" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Create Lease
+        </a>
+        {% endif %}
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Property</th>
+                        <th>Tenant</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Monthly Rent</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for lease in leases %}
+                    <tr>
+                        <td>{{ lease.id }}</td>
+                        <td>{{ lease.property.title }}</td>
+                        <td>{{ lease.tenant.full_name }}</td>
+                        <td>{{ lease.start_date }}</td>
+                        <td>{{ lease.end_date }}</td>
+                        <td>${{ "%.2f"|format(lease.monthly_rent) }}</td>
+                        <td>
+                            <span class="badge bg-{{ 'success' if lease.status == 'active' else 'danger' if lease.status == 'expired' else 'warning' }}">
+                                {{ lease.status|title }}
+                            </span>
+                        </td>
+                        <td>
+                            <a href="{{ url_for('view_lease', lease_id=lease.id) }}" class="btn btn-sm btn-info">View</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>  
+
+
+
+{% endblock %}

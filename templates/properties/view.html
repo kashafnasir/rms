@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block title %}{{ property.title }}{% endblock %}
+{% block page_title %}{{ property.title }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-10 offset-md-1">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-5">
+                        {% if property.image_path %}
+                        <img src="{{ url_for('static', filename='uploads/' + property.image_path) }}" class="img-fluid rounded" alt="{{ property.title }}">
+                        {% else %}
+                        <div class="bg-secondary text-white text-center rounded" style="height: 300px; display: flex; align-items: center; justify-content: center;">
+                            <i class="bi bi-building" style="font-size: 5rem;"></i>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-7">
+                        <h3>{{ property.title }}</h3>
+                        <p class="lead text-primary">${{ "%.2f"|format(property.rent_amount) }}/month</p>
+                        
+                        <hr>
+                        
+                        <p><strong>Type:</strong> {{ property.property_type }}</p>
+                        <p><strong>Address:</strong> {{ property.address }}</p>
+                        <p><strong>City, State:</strong> {{ property.city }}, {{ property.state }}</p>
+                        <p><strong>ZIP Code:</strong> {{ property.zip_code }}</p>
+                        
+                        <hr>
+                        
+                        <div class="row">
+                            <div class="col-md-4">
+                                <p><i class="bi bi-house"></i> <strong>Bedrooms:</strong> {{ property.bedrooms or 'N/A' }}</p>
+                            </div>
+                            <div class="col-md-4">
+                                <p><i class="bi bi-droplet"></i> <strong>Bathrooms:</strong> {{ property.bathrooms or 'N/A' }}</p>
+                            </div>
+                            <div class="col-md-4">
+                                <p><i class="bi bi-arrows-angle-expand"></i> <strong>Area:</strong> {{ property.area_sqft or 'N/A' }} sq ft</p>
+                            </div>
+                        </div>
+                        
+                        <hr>
+                        
+                        <p><strong>Security Deposit:</strong> pkr{{ "%.2f"|format(property.security_deposit or 0) }}</p>
+                        <p><strong>Status:</strong> 
+                            <span class="badge bg-{{ 'success' if property.availability_status == 'available' else 'danger' if property.availability_status == 'occupied' else 'warning' }}">
+                                {{ property.availability_status|title }}
+                            </span>
+                        </p>
+                        
+                        {% if property.owner %}
+                        <p><strong>Owner:</strong> {{ property.owner.full_name }}</p>
+                        {% endif %}
+                        
+                        <div class="mt-3">
+                            <a href="{{ url_for('properties') }}" class="btn btn-secondary">Back</a>
+                            {% if current_user.role in ['admin', 'owner'] and (current_user.role == 'admin' or property.owner_id == current_user.id) %}
+                            <a href="{{ url_for('edit_property', property_id=property.id) }}" class="btn btn-warning">Edit</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+                {% if property.description %}
+                <hr>
+                <div class="row">
+                    <div class="col-md-12">
+                        <h5>Description</h5>
+                        <p>{{ property.description }}</p>
+                    </div>
+                </div>
+                {% endif %}
+                
+                {% if property.amenities %}
+                <hr>
+                <div class="row">
+                    <div class="col-md-12">
+                        <h5>Amenities</h5>
+                        <div class="d-flex flex-wrap gap-2">
+                            {% for amenity in property.amenities.split(',') %}
+                            <span class="badge bg-info">{{ amenity.strip() }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

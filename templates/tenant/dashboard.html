@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+
+{% block title %}Tenant Dashboard{% endblock %}
+{% block page_title %}Tenant Dashboard{% endblock %}
+
+{% block content %}
+{% if lease %}
+<!-- Lease Information -->
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="bi bi-house"></i> My Current Lease</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        {% if property.image_path %}
+                        <img src="{{ url_for('static', filename='uploads/' + property.image_path) }}" class="img-fluid rounded" alt="{{ property.title }}">
+                        {% else %}
+                        <div class="bg-secondary text-white text-center rounded" style="height: 200px; display: flex; align-items: center; justify-content: center;">
+                            <i class="bi bi-building" style="font-size: 3rem;"></i>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-8">
+                        <h4>{{ property.title }}</h4>
+                        <p><i class="bi bi-geo-alt"></i> {{ property.address }}</p>
+                        <p><strong>Monthly Rent:</strong> ${{ "%.2f"|format(lease.monthly_rent) }}</p>
+                        <p><strong>Lease Period:</strong> {{ lease.start_date }} to {{ lease.end_date }}</p>
+                        <p><strong>Security Deposit:</strong> ${{ "%.2f"|format(lease.security_deposit or 0) }}</p>
+                        <a href="{{ url_for('view_lease', lease_id=lease.id) }}" class="btn btn-primary">View Full Lease</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Statistics -->
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card text-white bg-warning">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-exclamation-triangle"></i> Pending Payments</h5>
+                <h2>{{ pending_payments }}</h2>
+                <a href="{{ url_for('add_payment') }}" class="btn btn-light btn-sm">Make Payment</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card text-white bg-info">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-tools"></i> Maintenance Requests</h5>
+                <h2>{{ maintenance_requests|length }}</h2>
+                <a href="{{ url_for('add_maintenance') }}" class="btn btn-light btn-sm">Submit Request</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Payments -->
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="bi bi-credit-card"></i> Recent Payments</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Amount</th>
+                                <th>Method</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for payment in recent_payments %}
+                            <tr>
+                                <td>{{ payment.payment_date }}</td>
+                                <td>${{ "%.2f"|format(payment.amount) }}</td>
+                                <td>{{ payment.payment_method|title }}</td>
+                                <td>
+                                    <span class="badge bg-{{ 'success' if payment.status == 'completed' else 'warning' }}">
+                                        {{ payment.status }}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="bi bi-tools"></i> My Maintenance Requests</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Priority</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for request in maintenance_requests %}
+                            <tr>
+                                <td>{{ request.title }}</td>
+                                <td>
+                                    <span class="badge bg-{{ 'danger' if request.priority == 'urgent' else 'warning' }}">
+                                        {{ request.priority }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="badge bg-{{ 'success' if request.status == 'completed' else 'secondary' }}">
+                                        {{ request.status }}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% else %}
+<div class="alert alert-info">
+    <h4><i class="bi bi-info-circle"></i> No Active Lease</h4>
+    <p>You don't have an active lease at the moment. Please contact the administrator or browse available properties.</p>
+    <a href="{{ url_for('properties') }}" class="btn btn-primary">Browse Properties</a>
+</div>
+{% endif %}
+{% endblock %}
