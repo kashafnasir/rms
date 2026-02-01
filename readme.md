@@ -2,24 +2,8 @@
 
 A comprehensive web-based property rental management system built with Python, Flask, and SQLAlchemy.
 
-## 📋 Table of Contents
 
-- [Features](#features)
-- [System Requirements](#system-requirements)
-- [Installation](#installation)
-- [Configuration](#configuration)
-- [Running the Application](#running-the-application)
-- [User Roles](#user-roles)
-- [Project Structure](#project-structure)
-- [Database Models](#database-models)
-- [Usage Guide](#usage-guide)
-- [API Documentation](#api-documentation)
-- [Security Considerations](#security-considerations)
-- [Troubleshooting](#troubleshooting)
-- [Contributing](#contributing)
-- [License](#license)
-
-## ✨ Features
+##  Features
 
 ### Core Functionality
 
